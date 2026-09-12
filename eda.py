@@ -5,11 +5,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from recommender import ensure_data
+from recommender import load_data
 
 
 def main() -> None:
-    movies, ratings = ensure_data()
+    movies, ratings = load_data()
     output = Path(__file__).parent / "eda_summary.png"
     source = (Path(__file__).parent / "data" / "source.txt").read_text(encoding="utf-8").strip()
     dataset_label = "MovieLens latest-small" if source == "movielens-latest-small" else "Offline demo catalog"
