@@ -48,6 +48,48 @@ DEMO_MOVIES = [
     ("K.G.F: Chapter 2 (2022)", "Action|Crime|Drama", 4.32),
 ]
 
+# Short spoiler-free lines make the results more fun to read.
+MOVIE_HOOKS = {
+    "Toy Story (1995)": "A warm, funny adventure about friendship that never gets old.",
+    "Shrek (2001)": "A clever fairy-tale comedy with a big heart and memorable jokes.",
+    "Finding Nemo (2003)": "A colourful ocean adventure with humour, heart, and family love.",
+    "The Incredibles (2004)": "A superhero family story packed with action and clever comedy.",
+    "The Lion King (1994)": "An emotional coming-of-age journey with unforgettable music.",
+    "Frozen (2013)": "A magical adventure about courage, family, and finding your own path.",
+    "Moana (2016)": "A brave island adventure with beautiful music and a strong hero.",
+    "Coco (2017)": "A vibrant family story full of music, emotion, and beautiful visuals.",
+    "Monsters, Inc. (2001)": "A sweet and funny world where monsters discover friendship.",
+    "Inside Out (2015)": "A creative and touching story about feelings, growing up, and family.",
+    "Avengers: Endgame (2019)": "A huge superhero finale with emotional moments and epic battles.",
+    "Avengers: Infinity War (2018)": "A fast, high-stakes superhero adventure with surprising turns.",
+    "Iron Man (2008)": "A smart, funny origin story that started a superhero universe.",
+    "Spider-Man: No Way Home (2021)": "A fun, emotional Spider-Man adventure made for fans.",
+    "The Dark Knight (2008)": "A dark superhero thriller with an unforgettable villain and tension.",
+    "The Matrix (1999)": "A mind-bending sci-fi adventure that changes how you see reality.",
+    "Inception (2010)": "A clever dream-world thriller with suspense in every layer.",
+    "Interstellar (2014)": "A moving space journey about time, hope, and human connection.",
+    "Titanic (1997)": "A grand romance set against one of history's most famous disasters.",
+    "Jurassic Park (1993)": "A thrilling dinosaur adventure with suspense from start to finish.",
+    "Star Wars: Episode V - The Empire Strikes Back (1980)": "A classic space adventure with iconic characters and a famous twist.",
+    "Harry Potter and the Sorcerer's Stone (2001)": "A magical first journey into a world of friendship and wonder.",
+    "The Godfather (1972)": "A powerful crime drama about family, loyalty, and difficult choices.",
+    "Pulp Fiction (1994)": "A stylish crime story with sharp dialogue and unexpected connections.",
+    "Forrest Gump (1994)": "A heartfelt life journey told with humour, love, and hope.",
+    "3 Idiots (2009)": "A funny and inspiring college story about friendship and following your passion.",
+    "Dangal (2016)": "An inspiring sports drama about determination, family, and breaking barriers.",
+    "Baahubali 2: The Conclusion (2017)": "A grand action epic with royal drama, battles, and spectacle.",
+    "K.G.F: Chapter 2 (2022)": "A high-energy action drama about ambition, power, and survival.",
+}
+
+
+def movie_hook(title, genres):
+    """Give each movie a short, spoiler-free reason to watch it."""
+    if title in MOVIE_HOOKS:
+        return MOVIE_HOOKS[title]
+
+    genre_list = genres.replace("|", ", ")
+    return f"A good choice if you enjoy {genre_list.lower()} movies."
+
 
 def create_demo_data():
     """Save a small local dataset when download is unavailable."""
@@ -132,10 +174,17 @@ def recommend(movie_name, number_of_movies=5):
     results["final_score"] = 0.8 * results["similarity"] + 0.2 * (results["average_rating"] / 5)
     results = results.sort_values("final_score", ascending=False).head(number_of_movies)
 
-    print(f"\nBecause you liked {selected_title}\n")
+    print("\n" + "=" * 58)
+    print(f"Great choice! You liked: {selected_title}")
+    print("Here are some movies you may really enjoy next:")
+    print("=" * 58)
     for position, movie in enumerate(results.itertuples(), start=1):
-        print(f"{position}. {movie.title} - {movie.genres}")
+        readable_genres = movie.genres.replace("|", ", ")
+        print(f"\n{position}. {movie.title}")
+        print(f"   Genres: {readable_genres}")
         print(f"   Rating: {movie.average_rating:.2f}/5 from {movie.rating_count} ratings")
+        print(f"   Why you may like it: {movie_hook(movie.title, movie.genres)}")
+    print("\nEnjoy your movie time!\n")
 
 
 def popular_movies(number_of_movies=5):
@@ -144,10 +193,46 @@ def popular_movies(number_of_movies=5):
     movies = prepare_data(movies, ratings)
     results = movies[movies["rating_count"] >= 20].sort_values("average_rating", ascending=False)
 
-    print("\nPopular movies\n")
+    print("\n" + "=" * 58)
+    print("Not sure what to watch? Try these popular movies!")
+    print("=" * 58)
     for position, movie in enumerate(results.head(number_of_movies).itertuples(), start=1):
-        print(f"{position}. {movie.title} - {movie.genres}")
+        readable_genres = movie.genres.replace("|", ", ")
+        print(f"\n{position}. {movie.title}")
+        print(f"   Genres: {readable_genres}")
         print(f"   Rating: {movie.average_rating:.2f}/5 from {movie.rating_count} ratings")
+        print(f"   Why you may like it: {movie_hook(movie.title, movie.genres)}")
+    print("\nPick one, relax, and enjoy!\n")
+
+
+def movie_night_mode():
+    """A small interactive mode for exploring movie suggestions."""
+    print("\n" + "=" * 58)
+    print("              MOVIE NIGHT FINDER")
+    print("         Tell us what you like. We find the next watch.")
+    print("=" * 58)
+    name = input("\nWhat is your name? ").strip() or "Movie Lover"
+
+    while True:
+        print(f"\nHi {name}! What are you in the mood for?")
+        print("1. Find movies similar to my favourite movie")
+        print("2. Show popular picks")
+        print("3. Exit")
+        choice = input("Choose 1, 2, or 3: ").strip()
+
+        if choice == "1":
+            movie_name = input("Enter a movie you enjoyed: ").strip()
+            if movie_name:
+                recommend(movie_name, 5)
+            else:
+                print("Please enter a movie name next time.")
+        elif choice == "2":
+            popular_movies(5)
+        elif choice == "3":
+            print(f"\nThanks for visiting, {name}. See you on your next movie night!\n")
+            break
+        else:
+            print("Please choose 1, 2, or 3.")
 
 
 def main():
@@ -155,14 +240,21 @@ def main():
     parser.add_argument("movie", nargs="?", help="Movie name, for example: Toy Story")
     parser.add_argument("--count", type=int, default=5, help="Number of recommendations")
     parser.add_argument("--popular", action="store_true", help="Show popular movies")
+    parser.add_argument("--explore", action="store_true", help="Start interactive Movie Night Finder")
     args = parser.parse_args()
 
-    if args.popular:
+    print("\nWelcome to Movie Match!")
+    print("Find your next movie in a few seconds.")
+
+    if args.explore:
+        movie_night_mode()
+    elif args.popular:
         popular_movies(args.count)
     elif args.movie:
         recommend(args.movie, args.count)
     else:
-        print('Example: python recommender.py "Toy Story" --count 5')
+        print('Try: python recommender.py "Toy Story" --count 5')
+        print("Or try: python recommender.py --explore")
 
 
 if __name__ == "__main__":

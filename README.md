@@ -1,16 +1,18 @@
 # Movie Recommendation Engine
 
-This is a movie recommendation engine made using Python. It suggests movies that are similar to the movie entered by the user.
+This is a friendly movie recommendation engine made using Python. It helps you find your next movie by suggesting films similar to the one you already like.
 
-For example, if the user enters `Toy Story`, the program recommends movies such as `Coco`, `Shrek`, and `Finding Nemo` because they have similar genres.
+For example, if you enter `Toy Story`, the program recommends movies such as `Coco`, `Shrek`, and `Finding Nemo` because they have similar genres. Great choice - there is always another movie waiting for you!
 
 ## What this project does
 
 - Takes a movie name from the user.
 - Finds movies with similar genres.
 - Shows the top 3 to 5 movie recommendations.
+- Gives every recommendation a short, spoiler-free reason to watch it.
 - Also shows popular movies for a new user who has not selected a movie.
 - Creates a simple EDA graph for ratings and movie genres.
+- Includes a simple interactive **Movie Night Finder** mode.
 
 ## Dataset
 
@@ -69,6 +71,12 @@ Create the EDA chart:
 
 ```powershell
 python eda.py
+```
+
+Try the interactive Movie Night Finder:
+
+```powershell
+python recommender.py --explore
 ```
 
 ## Sample output
