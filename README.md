@@ -1,6 +1,6 @@
 # Movie Recommendation Engine
 
-This is a simple movie recommendation project made using Python. It suggests movies that are similar to the movie entered by the user.
+This is a movie recommendation engine made using Python. It suggests movies that are similar to the movie entered by the user.
 
 For example, if the user enters `Toy Story`, the program recommends movies such as `Coco`, `Shrek`, and `Finding Nemo` because they have similar genres.
 
