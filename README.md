@@ -1,50 +1,80 @@
-# MovieLens Recommendation Engine
+# Movie Recommendation Engine
 
-A reproducible content-based movie recommender that provides 3–5 (or up to 20) meaningful film picks. It uses MovieLens `latest-small` data: genres are converted into TF-IDF features, cosine similarity identifies related movies, and a Bayesian rating adjustment re-ranks them so a handful of ratings cannot overwhelm quality signals.
+This is a simple movie recommendation project made using Python. It suggests movies that are similar to the movie entered by the user.
 
-## Features
+For example, if the user enters `Toy Story`, the program recommends movies such as `Coco`, `Shrek`, and `Finding Nemo` because they have similar genres.
 
-- Downloads and caches the public MovieLens data on the first run. If downloading is unavailable, creates a valid bundled 20-movie offline demo catalog so every command still works.
-- Cleans and validates data, including missing rating statistics.
-- Handles exact and unambiguous partial title searches with useful error messages.
-- Uses TF-IDF genre vectors + cosine similarity for transparent content-based recommendations.
-- Re-ranks by a Bayesian audience-quality score and excludes movies with fewer than 20 ratings.
-- Has a cold-start mode for users who have not rated or selected anything yet.
-- Includes an EDA script producing `eda_summary.png`.
+## What this project does
 
-## Quick start
+- Takes a movie name from the user.
+- Finds movies with similar genres.
+- Shows the top 3 to 5 movie recommendations.
+- Also shows popular movies for a new user who has not selected a movie.
+- Creates a simple EDA graph for ratings and movie genres.
+
+## Dataset
+
+The project uses a local movie dataset with popular English and Indian movies such as Toy Story, Avengers, The Matrix, 3 Idiots, Dangal, Baahubali 2, and K.G.F Chapter 2.
+
+The program can also download the MovieLens dataset automatically when internet access is available. The local dataset is included so the project runs even without internet.
+
+## How the recommendation works
+
+This is a **content-based recommendation system**.
+
+1. Every movie has one or more genres, such as Action, Comedy, Drama, or Sci-Fi.
+2. The program converts genres into numbers using TF-IDF.
+3. It compares movies using cosine similarity.
+4. Movies with more similar genres get a higher similarity score.
+5. The final result also considers average rating and number of ratings, so low-rated movies do not appear at the top.
+
+## Files
+
+- `recommender.py` - main recommendation program.
+- `eda.py` - creates the EDA chart.
+- `requirements.txt` - required Python libraries.
+- `data/movies.csv` - movie names and genres.
+- `data/ratings.csv` - ratings used by the program.
+- `eda_summary.png` - EDA output graph.
+
+## How to run
+
+Open the project folder in VS Code and run these commands in the terminal:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+```
+
+Run recommendations for a movie:
+
+```powershell
 python recommender.py "Toy Story" --count 5
+```
+
+Try another movie:
+
+```powershell
+python recommender.py "The Matrix" --count 5
+```
+
+Show popular movies:
+
+```powershell
 python recommender.py --popular --count 5
+```
+
+Create the EDA chart:
+
+```powershell
 python eda.py
 ```
 
-## Methodology
+## Sample output
 
-1. **Data**: MovieLens `latest-small`, downloaded from GroupLens and cached in `data/`.
-2. **Preprocessing**: join movies with aggregate rating statistics; replace genre separators with tokens; normalize titles for user search.
-3. **Similarity**: TF-IDF represents each movie’s genre profile. Cosine similarity identifies films that share genres without privileging longer genre lists.
-4. **Re-ranking**: `0.75 × similarity + 0.25 × Bayesian rating / 5`. The Bayesian rating shrinks titles with few ratings toward the overall mean. Movies with fewer than 20 ratings are excluded.
-5. **Cold start**: `--popular` ranks frequently rated films using a stronger Bayesian prior.
+For `Toy Story`, the project recommends movies like Coco, Monsters Inc., Shrek, Finding Nemo, and Moana.
 
-The approach is intentionally interpretable. Its limitation is that it uses metadata rather than individual viewing histories. A future collaborative-filtering version could learn latent user/movie factors from the `ratings.csv` user IDs.
+## Future improvement
 
-## Example
-
-```text
-python recommender.py "Toy Story" --count 5
-```
-
-Each result reports genre, average rating, rating count, genre similarity, and final score so the ranking can be inspected rather than treated as a black box.
-
-## Project files
-
-- `recommender.py` — model, dataset loading, and command-line interface.
-- `eda.py` — repeatable exploratory analysis chart.
-- `requirements.txt` — Python dependencies.
-
-MovieLens data is not committed: it is automatically downloaded into `data/` on first use. If your network blocks it, the project writes a deterministic local demo dataset into `data/`; delete that folder and rerun when your connection is available to replace it with the full dataset.
+In the future, this project can use collaborative filtering. That would recommend movies based on ratings given by users with similar interests.
