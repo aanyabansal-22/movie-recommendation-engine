@@ -1,5 +1,3 @@
-"""Simple content-based movie recommendation engine."""
-
 import argparse
 import shutil
 import zipfile
